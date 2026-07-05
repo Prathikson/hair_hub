@@ -84,7 +84,7 @@ export default function CTASection() {
         <div className="reveal-card lg:col-span-7 img-card relative min-h-[450px] lg:h-full group">
           <div ref={parallaxRef} className="absolute -top-[20%] left-0 w-full h-[140%]">
             <Image
-              src="/hero.jpg"
+              src="/shop.jpg"
               alt="Barber Shop Interior"
               fill
               className="object-cover brightness-[0.65] transition-transform duration-1000 group-hover:scale-105"
