@@ -127,10 +127,10 @@ const HeroSection = () => {
           <div className="lg:col-span-8 flex flex-col items-start space-y-12">
             <h1 className="reveal leading-[0.9] tracking-tighter text-white">
               <span className="serif-italic text-[13vw] md:text-[9vw] lg:text-[8vw] block -mb-2">
-                Sharp, return
+                The Gold Standard of
               </span>
               <span className="font-black text-[13vw] md:text-[9vw] lg:text-[8vw] block uppercase italic">
-                the jealous barber.
+                 Modern grooming.
               </span>
             </h1>
 
