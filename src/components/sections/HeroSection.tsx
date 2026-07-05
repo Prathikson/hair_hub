@@ -108,7 +108,7 @@ const HeroSection = () => {
         className="absolute -top-[15%] left-0 w-full h-[130%] z-0"
       >
         <Image
-          src="/hero.jpg"
+          src="/Hero.jpg"
           alt="Luxury Barbering"
           fill
           priority
@@ -159,7 +159,7 @@ const HeroSection = () => {
             <div className="reveal glass-widget p-5 rounded-[2.5rem] w-full max-w-sm flex items-center gap-5">
               <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-black flex-shrink-0 border border-white/10 shadow-2xl">
                 <Image 
-                  src="/hero.jpg" 
+                  src="/kids_cut.jpg" 
                   alt="Barber Feature" 
                   fill 
                   className="object-cover"

@@ -107,7 +107,7 @@ export default function WhyUsSection() {
         className="absolute top-0 right-0 w-full lg:w-[55%] h-full opacity-10 lg:opacity-20 z-0 pointer-events-none"
       >
         <Image 
-          src="/hero.jpg" 
+          src="/beard_shave.jpg" 
           alt="Barber Background"
           fill
           className="object-cover grayscale"
