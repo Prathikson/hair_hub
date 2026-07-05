@@ -159,7 +159,7 @@ const HeroSection = () => {
             <div className="reveal glass-widget p-5 rounded-[2.5rem] w-full max-w-sm flex items-center gap-5">
               <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-black flex-shrink-0 border border-white/10 shadow-2xl">
                 <Image 
-                  src="https://images.unsplash.com/photo-1621605815844-830f605330aa?q=80&w=400" 
+                  src="/hero.jpg" 
                   alt="Barber Feature" 
                   fill 
                   className="object-cover"
