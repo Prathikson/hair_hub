@@ -19,16 +19,15 @@ const FAQS = [
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const sectionRef = useRef<HTMLElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".reveal-faq", {
-        y: 60,
+        y: 40,
         opacity: 0,
-        duration: 1.2,
+        duration: 0.4,
         stagger: 0.1,
-        ease: "power4.out",
+        ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top 80%",
@@ -41,7 +40,8 @@ export default function FAQSection() {
   return (
     <section 
       ref={sectionRef} 
-      className="relative w-full h-screen overflow-hidden bg-[#f8f8f8] text-black flex flex-col justify-center p-8 md:p-16 lg:px-24"
+      // Changed h-screen to min-h-screen for mobile content expansion
+      className="relative w-full min-h-screen bg-[#f8f8f8] text-black flex flex-col py-20 px-6 md:py-32 md:px-12 lg:px-24 overflow-hidden"
     >
       <style jsx>{`
         .serif-italic {
@@ -49,33 +49,36 @@ export default function FAQSection() {
           font-style: italic;
         }
 
-        /* UPDATED: Larger Capsule Wrapper */
         .capsule-cta {
           background: rgba(0, 0, 0, 0.03);
           border: 1px solid rgba(0, 0, 0, 0.08);
-          padding: 8px; /* Increased from 5px */
+          padding: 6px;
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
+          gap: 8px;
           transition: all 0.3s ease;
         }
 
-        .capsule-cta:hover {
-          background: rgba(0, 0, 0, 0.05);
-          border-color: rgba(0, 0, 0, 0.15);
-        }
-
-        /* UPDATED: Gigantic Button Style */
         .btn-green-gigantic {
           background-color: #58ae3a;
           color: #fff;
-          padding: 18px 48px; /* Massive padding */
+          padding: 14px 28px; /* Responsive padding */
           border-radius: 999px;
           font-weight: 900;
-          font-size: 16px; /* Larger font */
+          font-size: 14px;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           box-shadow: 0 10px 20px -5px rgba(88, 174, 58, 0.3);
+          white-space: nowrap;
+        }
+
+        @media (min-width: 768px) {
+          .btn-green-gigantic {
+            padding: 18px 48px;
+            font-size: 16px;
+          }
+          .capsule-cta { padding: 8px; gap: 12px; }
         }
 
         .faq-border {
@@ -83,14 +86,18 @@ export default function FAQSection() {
         }
 
         .icon-wrapper {
-          width: 44px;
-          height: 44px;
+          width: 38px;
+          height: 38px;
           display: flex;
           align-items: center;
           justify-content: center;
           border-radius: 50%;
           background: rgba(0, 0, 0, 0.03);
           transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        @media (min-width: 768px) {
+          .icon-wrapper { width: 44px; height: 44px; }
         }
 
         .is-open .icon-wrapper {
@@ -100,61 +107,67 @@ export default function FAQSection() {
         }
 
         .display-text {
-          line-height: 0.9;
+          line-height: 0.85;
           letter-spacing: -0.04em;
         }
       `}</style>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start h-full max-h-[80vh]">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start relative z-10">
         
-        {/* LEFT: GIGANTIC TITLE */}
-        <div className="lg:col-span-5 flex flex-col justify-between h-full py-4">
+        {/* LEFT: TITLE & CTA */}
+        <div className="lg:col-span-5 flex flex-col justify-between lg:sticky lg:top-32">
           <div className="reveal-faq">
-            <span className="block text-[10px] font-black uppercase tracking-[0.4em] mb-8 opacity-30">Our Advice</span>
-            <h2 className="display-text text-[10vw] md:text-[6vw] lg:text-[5vw] font-black italic uppercase">
-              Got <br /> <span className="serif-italic font-normal lowercase tracking-normal">questions?</span>
+            <span className="block text-[10px] font-black uppercase tracking-[0.4em] mb-6 md:mb-8 text-[#58ae3a]">
+              Common Inquiries
+            </span>
+            <h2 className="display-text text-6xl md:text-8xl lg:text-[6vw] font-black italic uppercase">
+              Got <br /> 
+              <span className="serif-italic font-normal lowercase tracking-normal text-[#58ae3a]">
+                questions?
+              </span>
             </h2>
-            <p className="mt-8 max-w-xs text-base opacity-50 font-medium leading-relaxed">
+            <p className="mt-6 md:mt-8 max-w-sm text-base md:text-lg opacity-50 font-medium leading-relaxed">
               Everything you need to know about our craft, booking, and policy.
             </p>
           </div>
 
-          {/* UPDATED: Gigantic CTA Section */}
-          <div className="reveal-faq mt-12">
+          <div className="reveal-faq mt-10 md:mt-16">
             <Link href="/booking" className="capsule-cta group">
-              <span className="px-8 text-[13px] font-black uppercase tracking-[0.2em] opacity-40">
+              <span className="pl-5 pr-1 text-[11px] md:text-[13px] font-black uppercase tracking-[0.15em] opacity-40">
                 Still unsure?
               </span>
               <span className="btn-green-gigantic flex items-center gap-3 group-hover:bg-[#4d9a32] transition-all duration-300 group-hover:scale-[1.02]">
-                Contact Us <ArrowRight size={20} strokeWidth={3} />
+                Contact Us <ArrowRight size={18} strokeWidth={3} />
               </span>
             </Link>
           </div>
         </div>
 
         {/* RIGHT: ACCORDION LIST */}
-        <div ref={contentRef} className="lg:col-span-7 h-full flex flex-col justify-center">
+        <div className="lg:col-span-7 mt-12 lg:mt-0">
           {FAQS.map((faq, i) => {
             const isOpen = openIndex === i;
             return (
               <div 
                 key={i} 
-                className={`reveal-faq faq-border group cursor-pointer py-6 md:py-8 ${isOpen ? 'is-open' : ''}`}
+                className={`reveal-faq faq-border group cursor-pointer py-6 md:py-10 transition-colors ${isOpen ? 'is-open' : ''}`}
                 onClick={() => setOpenIndex(isOpen ? null : i)}
               >
-                <div className="flex justify-between items-center gap-8">
-                  <h3 className={`text-lg md:text-2xl font-bold tracking-tight transition-colors duration-300 ${isOpen ? 'text-[#58ae3a]' : 'text-black'}`}>
+                <div className="flex justify-between items-center gap-6">
+                  <h3 className={`text-xl md:text-3xl font-bold tracking-tight transition-colors duration-300 ${isOpen ? 'text-[#58ae3a]' : 'text-black'}`}>
                     {faq.q}
                   </h3>
                   <div className="icon-wrapper flex-shrink-0">
-                    <Plus size={20} strokeWidth={3} />
+                    <Plus className="w-5 h-5 md:w-6 md:h-6" strokeWidth={3} />
                   </div>
                 </div>
 
                 <div 
-                  className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-40 opacity-100 mt-6' : 'max-h-0 opacity-0'}`}
+                  className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                    isOpen ? 'max-h-[300px] opacity-100 mt-6 md:mt-8' : 'max-h-0 opacity-0'
+                  }`}
                 >
-                  <p className="text-base md:text-lg text-black/50 font-medium max-w-xl leading-relaxed">
+                  <p className="text-base md:text-xl text-black/60 font-medium max-w-2xl leading-relaxed">
                     {faq.a}
                   </p>
                 </div>
@@ -164,9 +177,9 @@ export default function FAQSection() {
         </div>
       </div>
 
-      {/* Background Accent */}
-      <div className="absolute top-1/2 -left-10 -translate-y-1/2 opacity-[0.03] pointer-events-none select-none">
-        <h1 className="text-[30vw] font-black">FAQ</h1>
+      {/* Background Accent - Adjusted for better mobile positioning */}
+      <div className="absolute top-1/2 -right-10 lg:-left-10 -translate-y-1/2 opacity-[0.03] pointer-events-none select-none z-0">
+        <h1 className="text-[40vw] lg:text-[30vw] font-black">FAQ</h1>
       </div>
     </section>
   );
