@@ -15,9 +15,7 @@ export default function BarbersSection() {
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // We use a context to ensure clean cleanup
     const ctx = gsap.context(() => {
-      // 1. Header Reveal
       gsap.from(".reveal-header", {
         y: 30,
         opacity: 0,
@@ -29,30 +27,13 @@ export default function BarbersSection() {
           start: "top 85%",
         },
       });
-
-      // 2. Card Stagger (More robust selector)
-      const cards = gsap.utils.toArray(".barber-poster");
-      if (cards.length > 0) {
-        gsap.from(cards, {
-          y: 60,
-          opacity: 0,
-          scale: 0.95,
-          duration: 1,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: "top 85%", // Triggers earlier for better mobile experience
-            toggleActions: "play none none none",
-          },
-        });
-      }
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  const posterColors = ["#fcee0a", "#2d4a3e", "#8ecae6", "#1a1a1a"];
+  // Soft pastel versions of your colors
+  const posterColors = ["#fef9c3", "#dcfce7", "#e0f2fe", "#f3f4f6"];
 
   return (
     <section 
@@ -89,17 +70,19 @@ export default function BarbersSection() {
 
         .poster-headline {
           font-weight: 900;
-          line-height: 0.75;
-          letter-spacing: -0.06em;
+          line-height: 0.8;
+          letter-spacing: -0.04em;
           text-transform: uppercase;
           text-align: center;
           position: absolute;
-          top: 45%;
+          top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
           width: 100%;
-          z-index: 1;
+          z-index: 5;
           pointer-events: none;
+          mix-blend-mode: overlay;
+          opacity: 0.5;
         }
 
         .poster-pill {
@@ -113,26 +96,35 @@ export default function BarbersSection() {
         }
 
         .barber-poster {
-          border-radius: 2rem;
+          border-radius: 1.5rem;
           position: relative;
           overflow: hidden;
-          transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-          min-height: 520px; /* High enough to show the "Poster" effect on mobile */
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          padding: 2rem;
-        }
-
-        @media (min-width: 1024px) {
-          .barber-poster {
-            height: 65vh;
-            min-height: 600px;
-          }
+          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          height: 70vh;
+          min-height: 550px;
+          background-color: #f8f8f8; /* Base color when not hovered */
         }
 
         .barber-poster:hover {
-          transform: translateY(-8px);
+          transform: translateY(-10px);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Ensure image fills the container */
+        .barber-image-container {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+        }
+
+        .barber-image-container :global(img) {
+          object-fit: cover;
+          object-position: center top;
+          transition: transform 0.7s ease;
+        }
+
+        .barber-poster:hover .barber-image-container :global(img) {
+          transform: scale(1.05);
         }
       `}</style>
 
@@ -152,74 +144,87 @@ export default function BarbersSection() {
           <Link href="/team" className="capsule-cta group bg-gray-50">
             <span className="pl-5 pr-1 text-[11px] font-bold uppercase tracking-[0.1em] opacity-60">Meet the crew</span>
             <span className="btn-green flex items-center gap-2">
-              All Barbers <ArrowRight size={14} />
+              Our Work <ArrowRight size={14} />
             </span>
           </Link>
         </div>
       </div>
 
-      {/* GRID SECTION */}
+      {/* GRID SECTION - Changed to lg:grid-cols-3 for wider cards */}
       <div 
         ref={gridRef}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full"
       >
-        {BARBERS.slice(0, 4).map((b, i) => (
+        {BARBERS.slice(0, 3).map((b, i) => (
           <div 
             key={b.id} 
             className="barber-poster group cursor-pointer"
-            style={{ backgroundColor: posterColors[i % posterColors.length] }}
           >
-            {/* Top Badge */}
-            <div className="z-20 self-center">
-               <span className="poster-pill bg-white/10 backdrop-blur-md" style={{ 
-                 color: i === 3 ? '#fff' : '#000',
-                 borderColor: i === 3 ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'
-               }}>
-                 {b.title.split(' ')[0]}
-               </span>
-            </div>
-
             {/* Poster Background Text */}
-            <h3 className={`poster-headline text-8xl md:text-7xl lg:text-[6.5vw] ${i === 3 ? 'text-white' : 'text-black'} opacity-90`}>
-               THE <br /> {b.name.split(' ')[0]}
+            <h3 className="poster-headline text-8xl md:text-9xl lg:text-[8vw] text-black">
+               {b.name.split(' ')[0]}
             </h3>
 
-            {/* Cutout Image */}
-            <div className="absolute inset-0 z-10 flex items-end justify-center pointer-events-none">
-              <div className="relative w-full h-[85%] transition-transform duration-700 group-hover:scale-105 group-hover:translate-y-[-5px]">
-                <Image 
-                  src={`https://images.unsplash.com/photo-1621605815844-830f605330aa?q=80&w=400`} 
-                  alt={b.name}
-                  fill
-                  className="object-contain object-bottom"
-                />
+            {/* FULL FILL IMAGE */}
+            <div className="barber-image-container">
+              <Image 
+                src={b.image} 
+                alt={b.name}
+                fill
+                priority
+              />
+            </div>
+
+            {/* TOP INFO (Visible Always) */}
+            <div className="relative z-10 p-8 flex justify-between items-start">
+               <span className="poster-pill bg-white/80 backdrop-blur-md">
+                 {b.title}
+               </span>
+               <div className="bg-white/80 backdrop-blur-md h-10 w-10 rounded-full flex items-center justify-center">
+                  <Star size={14} fill="#58ae3a" stroke="none" />
+               </div>
+            </div>
+
+            {/* BOTTOM INFO (Visible Always) */}
+            <div className="absolute bottom-0 left-0 w-full p-8 z-10 flex flex-col gap-1 transition-opacity duration-300 group-hover:opacity-0">
+              <p className="text-2xl font-black text-white uppercase tracking-tighter">{b.name}</p>
+              <div className="flex gap-2">
+                {b.specialties.slice(0, 2).map(s => (
+                   <span key={s} className="text-[9px] font-bold text-white uppercase opacity-60 tracking-widest">{s}</span>
+                ))}
               </div>
             </div>
 
-            {/* Specialties Pills */}
-            <div className="z-20 flex flex-wrap justify-center gap-2 mt-auto">
-              {b.specialties.slice(0, 2).map((s) => (
-                <span key={s} className="poster-pill bg-white/20 backdrop-blur-sm" style={{ 
-                  color: i === 3 ? '#fff' : '#000',
-                  border: 'none'
-                 }}>
-                  {s}
-                </span>
-              ))}
-            </div>
-
-            {/* Hover Overlay */}
-            <div className="absolute inset-0 bg-black/90 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center z-30 p-8 text-center text-white">
-                <div className="bg-[#58ae3a] p-3 rounded-2xl mb-4">
-                  <Star size={24} fill="#fff" stroke="none" />
+            {/* HOVER OVERLAY - Shows Pastel Color */}
+            <div 
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center z-30 p-10 text-center"
+              style={{ backgroundColor: `${posterColors[i % posterColors.length]}ee` }} // 'ee' adds transparency to the pastel
+            >
+                <div className="bg-black p-4 rounded-3xl mb-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  <Star size={32} fill="#58ae3a" stroke="none" />
                 </div>
-                <p className="text-3xl font-black italic tracking-tighter mb-1">{b.rating} / 5.0</p>
-                <p className="text-[10px] uppercase tracking-[0.2em] opacity-40 mb-8">{b.experience} Years Exp.</p>
+                
+                <h4 className="text-4xl font-black text-black mb-2 tracking-tighter transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">
+                  {b.rating} Rating
+                </h4>
+                
+                <p className="text-sm font-bold text-black/60 uppercase tracking-widest mb-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-100">
+                  {b.experience} Years of Craft
+                </p>
+
+                <div className="flex flex-wrap justify-center gap-2 mb-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-150">
+                  {b.specialties.map((s) => (
+                    <span key={s} className="px-4 py-2 bg-black/5 border border-black/10 rounded-full text-[10px] font-black uppercase text-black">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+
                 <Link 
                   href={`/booking?barber=${b.id}`} 
-                  className="bg-[#58ae3a] text-white px-8 py-3 rounded-full text-[11px] font-black uppercase tracking-widest transition-transform active:scale-95"
+                  className="bg-black text-white px-10 py-4 rounded-full text-[12px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-200"
                 >
-                   Book {b.name.split(' ')[0]}
+                   Book Appointment
                 </Link>
             </div>
           </div>

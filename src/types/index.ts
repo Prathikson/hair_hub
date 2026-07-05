@@ -27,6 +27,7 @@ export interface Barber {
   bio: string;
   experience: number; // years
   specialties: string[];
+  image: string;
   rating: number;
   reviewCount: number;
   available: boolean;
